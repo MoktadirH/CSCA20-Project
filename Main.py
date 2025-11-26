@@ -30,4 +30,4 @@ Functions.ShowHands(test_deck,False , card_template, colors)
 
 
 
-        
+print("hello")
