@@ -24,4 +24,11 @@ def pick_card(deck, bot, current_card):
         if possible_cards:
             picked_card=random.choice(possible_cards)
             deck.remove(picked_card)
-            return picked_card, deck
+            return picked_card, 
+       "else, pick up a card, not done yet"
+
+def log_play(deck, card, player):
+    with open("game_log.txt", "w") as file:
+        #CAN CHANGE SO THAT CARD NAME HAS COLOR IN TERMS OF WHAT IT WAS
+        file.write(f"Player {player} had {len(deck)} before making a turn and played {card.split()[1]} {card.split()[1]}\n")
+        file.write(f"Player {player}'s deck: {deck}\n\n")
