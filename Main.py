@@ -1,4 +1,9 @@
 import Functions
+class Player ():
+    def __init__(self, deck, bot):
+        self.deck = deck
+        self.bot = bot
+
 card_template=[
 "╭══════╮",
 "║      ║",
@@ -25,9 +30,9 @@ class Person (deck, bot):
     self.deck = deck
     self.bot=bot"""
 
-Functions.ShowHands(test_deck,False , card_template, colors)
+#MENU
+
+#Create Player objects
 
 
-
-
-print("hello")
+Functions.ShowHands(test_deck,False , card_template)
