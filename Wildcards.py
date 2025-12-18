@@ -9,4 +9,10 @@ def reverse(direction):
     #siwtches the direction
     return direction * -1
 
+"""
+for draw two and draw four, get the deck from the player class plus the main deck and get 4 from the main deck
+and add it to the player deck
+return the new player deck
+"""
+
 
