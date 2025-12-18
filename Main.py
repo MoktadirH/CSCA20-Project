@@ -1,5 +1,6 @@
 import Functions
 import Menu
+import time
 class Player ():
     def __init__(self, deck, bot):
         self.deck = deck
@@ -40,13 +41,12 @@ while True:
         menu_options[choice](wildcard_options, current_wildcards)
     elif choice == "start":
         menu_options[choice]
-        break
     else:
         print("Invalid option. Please try again.")
+        #Allow people to see message before refreshing the console
+        time.sleep(0.9)
+    
 
 
 #Loop for the actual game
 
-
-
-Functions.ShowHands(test_deck,False , card_template)
