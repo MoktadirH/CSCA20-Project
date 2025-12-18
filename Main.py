@@ -23,9 +23,9 @@ menu_options={"start":Menu.start_game,
 
 
 #List of wildcards available, will not be changed, acts as a template
-wildcard_options=["skip", "reverse", "draw two", "wild", "draw four", "swap hands"]
+wildcard_options=["skip", "reverse", "two", "wild", "four", "swap"]
 #All active by default
-current_wildcards=["skip", "reverse", "draw two", "wild", "draw four", "swap hands"]
+current_wildcards=["skip", "reverse", "two", "wild", "four", "swap"]
 
 #Loop just for menu
 while True:
