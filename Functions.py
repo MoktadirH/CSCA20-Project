@@ -15,6 +15,28 @@ colors = {
 console = Console()
 #keep track of decks after every turn for game log
 game_logs = []
+
+def makeDeck(wildcards) -> list:
+    """
+    This function makes the deck that is in the "middle" of the table. It takes in the wildcards that were selected
+    and makes a deck with 2 copies of each card and 4 of each wildcard.
+    The function takes a wildcard parameter and returns a list with all the cards
+    """
+    deck = []
+    #Goes through all the colors for the regular cards
+    for color in ["red", "green", "yellow", "blue", "grey"]:
+        #For each color, it makes cards numbered 0-9
+        for number in range(0, 10):
+            #Makes two of each card
+            deck.append(f"{color} {number}")
+            deck.append(f"{color} {number}")
+    #Adds the wildcards
+    for wildcard in wildcards:
+        #4 of each wildcard
+        for i in range(4):
+            deck.append(wildcard)
+
+
 def ShowHands (deck, template):
     #[/] turns the color off so that it does not leak later
     hand_lines = ["[bold cyan]Your hand:[/]\n"]
