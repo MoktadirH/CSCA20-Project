@@ -25,7 +25,6 @@ colors={
     "default": "\033[0m"}
 
 menu_options={"start":Menu.start_game,
-              "settings":Menu.settings,
               "wildcards":Menu.wildcards,
               "exit":Menu.exit_game}
 

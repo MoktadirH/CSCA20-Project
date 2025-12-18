@@ -7,6 +7,10 @@ The game will not start until the player chooses the "start" option from the men
 """
 
 def player_selection() -> int:
+    """
+    Chooses the amount of actual players playing the game. The function repeatedly
+    asks for an input until a proper number is acquired and returns the integer.
+    """
     while True:
         try:
             num_players = int(input("Enter number of players (1-4): "))
@@ -20,7 +24,8 @@ def player_selection() -> int:
 def wildcards(template,current) -> list:
     """
     Allows the user to change the wildcard selection, they can either choose to remove or add a wildcard into the pool
-    Function returns the wildcard of interest and whether to add or remove it
+    Function returns the wildcard of interest and whether to add or remove. The function returns a list with the
+    updated active wildcards.
     """
     #Keep asking until a proper response is given
     while True:
@@ -55,17 +60,18 @@ def wildcards(template,current) -> list:
         print("\033[H\033[2J")
 
 def start_game():
-    #Creates a loading bar before starting the game, transition
+    """
+    Creates a loading bar before starting the game for a smooth transition
+    """
     for _ in track(range(100), description="[green]Starting Game..."):
         time.sleep(0.02)
 
-def settings(template,current):
-    #Ignore parameters, only used for consistency in main.py
-    pass
 
 def exit_game(template,current):
-    #Ignore parameters, only used for consistency in main.py
-    #Same transition for a smooth exit
+    """
+    parameters, only used for consistency in main.py
+    Same transition for a smooth exit
+    """
     for _ in track(range(100), description="[red]Closing Game..."):
         time.sleep(0.01)
     quit()
