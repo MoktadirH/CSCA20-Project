@@ -199,7 +199,7 @@ def generate_game_pdf(winner):
         pdf.cell(0, 8, f"Placed Card: {log['played_card']} | Cards left: {len(log['deck'])}", ln=True)
         pdf.multi_cell(0, 8, f"Deck: {', '.join(log['deck'])}", ln=True)
         pdf.ln(2)
-    #No winner
+    #Winner has been declared to a player
     if winner !=0:
         #Bolder and larger font to add emphasis at the end
         pdf.set_font("Arial", "B", 12)
