@@ -62,9 +62,9 @@ def wildcards(template,current) -> list:
 
 def start_game():
     """
-    Creates a loading bar before starting the game for a smooth transition
+    Creates a loading bar before starting the game for a smooth transition. Uses rich
     """
-    for i in track(range(100), description="[green]Starting Game..."):
+    for i in track(range(100), "[green]Starting Game..."):
         time.sleep(0.02)
 
 
@@ -72,6 +72,6 @@ def exit_game():
     """
     Transition for a smooth. Does not take in anything and does not return anything
     """
-    for i in track(range(100), description="[red]Closing Game..."):
+    for i in track(range(100), "[red]Closing Game..."):
         time.sleep(0.01)
     quit()
