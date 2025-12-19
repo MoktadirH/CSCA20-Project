@@ -17,9 +17,6 @@ card_template=[
 "║      ║",
 "╰══════╯"
 ]
-test_deck=["red 5", "blue 2", "green 9", "yellow 0",
-           "grey 4", "red 7", "blue 1", "green 2"]
-
 menu_options={"start":Menu.start_game,
               "wildcards":Menu.wildcards,
               "players": Menu.player_selection,
@@ -33,8 +30,6 @@ current_wildcards=["skip", "reverse", "two", "wild", "four", "swap"]
 #The main deck that will be used to get cards from, global so it can be accessed by all files
 global main_deck
 main_deck=[]
-#Making it global allows it to be changed for any file
-global last_card
 last_card=""
 #The amount of actual players playing
 player_count=0
@@ -47,6 +42,9 @@ play_game=False
 #Direction and the turn, starts off going forward unless a reverse card is placed
 turn=0
 direction=1
+turn_count=1
+
+debug=0
 
 
 
@@ -79,7 +77,7 @@ for i in range (4):
     #used to store the deck before assigning it
     temp_deck=[]
     #Grab 7 cards from the main deck
-    for j in range (7):
+    for j in range (5):
         temp_deck.append(main_deck.pop(0))
     if player_count>i:
         players.append(Player(temp_deck,False))
@@ -99,8 +97,8 @@ while play_game:
         Functions.ShowHands(players[turn].deck, card_template)
     #At this point, the last card will be replaced by the new card and the old one will be readded back to the deck randomly
     main_deck.insert(random.randint(0, len(main_deck)-1), last_card)
-    players[turn].deck=Functions.pick_card(players[turn].deck, players[turn].bot, last_card, main_deck)
-    Functions.log_play(players[turn].deck, last_card, turn+1)
+    players[turn].deck,last_card=Functions.pick_card(players[turn].deck, players[turn].bot, last_card, main_deck)
+    Functions.log_play(players[turn].deck, last_card, turn+1,turn_count)
     if players[turn].deck==[]:
         play_game=False
         print(f"Player {turn+1} has won the game!")
@@ -111,10 +109,5 @@ while play_game:
             turn=0
         else:
             turn=turn+1
-        
-
-
-    
-
-
-
+    turn_count+=1
+Functions.generate_game_pdf()
