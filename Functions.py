@@ -116,9 +116,9 @@ def log_play(deck, card, player):
     #Update after every turn
     game_logs.append({
         "player": player,
-        "deck_before": len(deck),
+        "deck_length": len(deck),
         "played_card": card,
-        "deck_after": deck
+        "deck": deck
     })
 
 def generate_game_pdf(filename="game_summary.pdf"):

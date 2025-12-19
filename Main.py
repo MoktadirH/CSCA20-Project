@@ -97,7 +97,18 @@ while play_game:
         time.sleep(1)
         #Show the current player's hand
         Functions.ShowHands(players[turn].deck, card_template)
-        players[turn].deck=Functions.pick_card(players[turn].deck, players[turn].bot, last_card)
+    players[turn].deck=Functions.pick_card(players[turn].deck, players[turn].bot, last_card)
+    Functions.log_play(players[turn].deck, last_card, turn+1)
+    if players[turn].deck==[]:
+        play_game=False
+        print(f"Player {turn+1} has won the game!")
+        Functions.generate_game_pdf()
+        break
+    else:
+        if turn==3:
+            turn=0
+        else:
+            turn=+1
 
 
     
