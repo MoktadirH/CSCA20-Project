@@ -10,6 +10,8 @@ def player_selection() -> int:
     """
     Chooses the amount of actual players playing the game. The function repeatedly
     asks for an input until a proper number is acquired and returns the integer.
+    Parameters are only used for consistency in main.py and is not used in the function.
+    
     """
     while True:
         try:
@@ -31,12 +33,13 @@ def wildcards(template,current) -> list:
     while True:
         #Clears the console
         print("\033[H\033[2J")
+        print(f"Possible wildcards: {', '.join(template)}")
         print(f"Current wildcards: {', '.join(current)}")
         action = input("Would you like to add or remove a wildcard? (add/remove or exit to leave): ").strip().lower()
-        if action != "add" and action != "remove":
-            print("Invalid action. Please enter 'add' or 'remove'.")
-        elif action == "exit":
+        if action == "exit":
             return current
+        elif action != "add" and action != "remove":
+            print("Invalid action. Please enter 'add' or 'remove'.")
         else:
             #While loop until proper answer is given
             while True:
@@ -51,10 +54,8 @@ def wildcards(template,current) -> list:
                     return current
                 elif wildcard_name in template and action == "remove" and wildcard_name not in current:
                     print(f"{wildcard_name} is not in the current wildcard pool. Try again.")
-                    return current
                 elif wildcard_name in template and action == "add" and wildcard_name in current:
                     print(f"{wildcard_name} is already in the current wildcard pool. Try again.")
-                    return current
                 else:
                     print("Invalid wildcard name. Please try again.")
         print("\033[H\033[2J")
@@ -67,10 +68,9 @@ def start_game():
         time.sleep(0.02)
 
 
-def exit_game(template,current):
+def exit_game():
     """
-    parameters, only used for consistency in main.py
-    Same transition for a smooth exit
+    Transition for a smooth. Does not take in anything and does not return anything
     """
     for i in track(range(100), description="[red]Closing Game..."):
         time.sleep(0.01)

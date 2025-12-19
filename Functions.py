@@ -2,10 +2,9 @@ import random
 from rich.console import Console
 from rich.text import Text
 from rich.panel import Panel
-from rich.layout import Layout
+from rich.columns import Columns
 from fpdf import FPDF
-#We need this when players or a bot chooses a card and it is a wildcard
-import Wildcards
+
 
 colors = {
     "red": "[red]",
@@ -14,13 +13,13 @@ colors = {
     "blue": "[blue]",
     "grey": "[grey]"
 }
-wildcard_symbols={
+widcard_symbols={
     "skip": "⏭",
     "reverse": "↔",
     "two": "+",
-    "wild": "*",
     "four": "#",
     "swap": "↩"}
+
 
 console = Console()
 #keep track of decks after every turn for game log
@@ -41,10 +40,10 @@ def makeDeck(wildcards) -> list:
             deck.append(color + " " + str(number))
             deck.append(color + " " + str(number))
     #Adds the wildcards
-    """for wildcard in wildcards:
+    for wildcard in wildcards:
         #4 of each wildcard
         for i in range(4):
-            deck.append("grey " + wildcard)"""
+            deck.append("grey " + wildcard)
     return deck
 
 
@@ -61,8 +60,14 @@ def ShowHands (deck, template, picked_card):
         for line in template:
             line_sections = []
             for each in row:
-                color, card = each.split(" ")
-                card_color=colors.get(color)
+                hand_color, hand_card = each.split(" ")
+                #If it is a wildcard, replace the card name with the. Will always be grey too
+                if hand_color=="grey":
+                    #card variable is what will appear on the card, hand_card is used for internal code
+                    card=widcard_symbols.get(hand_card)
+                else:
+                    card=hand_card
+                card_color=colors.get(hand_color.strip())
                 card_line = card_color + line.replace("x", str(card)) + "[/]"
                 line_sections.append(card_line)
             #Join individual card line with a space
@@ -73,6 +78,9 @@ def ShowHands (deck, template, picked_card):
     
     #Making the card for the last played card and putting it in a panel
     picked_color,picked_number=picked_card.split(" ")
+    #After wildcard is placed, the color changes so we need to see if the number appears in the wildcard dictionary
+    if picked_number in widcard_symbols:
+        picked_number=widcard_symbols.get(picked_number)
     picked_card_color=colors.get(picked_color)
     picked_card_lines=[]
     for line in template:
@@ -81,12 +89,7 @@ def ShowHands (deck, template, picked_card):
     picked_card_text = "\n".join(picked_card_lines)
     picked_panel = Panel(picked_card_text, title="Last Played Card", border_style="red")
 
-    layout=Layout()
-    layout.split_row(
-        Layout(panel,name="hand", ratio=3),
-        Layout(picked_panel, name="picked_card", ratio=1)
-    )
-    console.print(layout)
+    console.print(Columns([panel,picked_panel]))
 
 #Return a tuple of the deck and the last played card
 def pick_card(deck, bot, current_card,pile) -> tuple:
@@ -110,7 +113,7 @@ def pick_card(deck, bot, current_card,pile) -> tuple:
             if picked_card.split(" ")[0]=="grey":
                 #assign wildcard abilities and choose a random color
                 new_color=random.choice(["red","green","blue","yellow"])
-                picked_card=new_color +" "+ picked_card.split(' ')[1]
+                picked_card=new_color +" "+ picked_card.split(" ")[1]
             last_card=picked_card
             return (deck,last_card)
         else:
@@ -152,26 +155,25 @@ def pick_card(deck, bot, current_card,pile) -> tuple:
                 continue
 
 
-def log_play(deck, card, player,turn):
+def log_play(deck, player, card,turn):
     """Update after every turn and adds a dictionary as an index in a list. Takes in the
     player's deck, player and turn number, and the card played."""
     if deck is None:
         game_logs.append({
-            "player": player,
-            "deck_length": 0,
-            "played_card": card,
-            "deck": [],
-            "turn": turn
+            "player":player,
+            "played_card":card,
+            "deck":[],
+            "turn":turn,
         })
     else:
         game_logs.append({
-        "player": player,
-        "deck_length": len(deck),
-        "played_card": card,
-        "deck": deck.copy()
+        "player":player,
+        "played_card":card,
+        "deck":deck.copy(),
+        "turn":turn,
         })
 
-def generate_game_pdf():
+def generate_game_pdf(winner):
     """
     Using a game log that was tracking every move, it creates a PDF with each turn's details so that the move can be traced back.
     It also shows the whole match so that player's can analyze their moves and see what they could've changed.
@@ -179,24 +181,28 @@ def generate_game_pdf():
     """
     pdf = FPDF()
     pdf.add_page()
-    #Spacing margins
-    pdf.set_margins(15, 15, 15)
+    #Spacing margins, left, top and right side
+    pdf.set_margins(15, 15, 20)
     pdf.set_font("Arial", "B", 16)
-    #Code for blue
-    pdf.set_text_color(0, 0, 128)
-    pdf.cell(200, 15, txt="Uno Game Summary", ln=True, align='C')
+    #cell is where you can write text onto, change
+    pdf.cell(0, 15, txt="Uno Game Activity", ln=True, align="C")
+    #Spacing
     pdf.ln(10)
     pdf.set_font("Arial", "B", 12)
-    pdf.set_text_color(0, 0, 0)
-    pdf.cell(200, 10, txt="Game Activity Log", ln=True, align='L')
+    pdf.cell(0, 10, txt="Turn Log", ln=True, align="L")
     pdf.ln(5)
     pdf.set_font("Arial", size=11)
     for log in game_logs:
-        pdf.set_fill_color(240, 240, 240)
-        pdf.cell(200, 8, txt=f"Player {log['player']}: Turn {log.get('turn')}", ln=True, fill=True)
-        pdf.cell(200, 8, txt=f"Played: {log['played_card']} | Cards left: {log['deck_length']}", ln=True)
-        pdf.multi_cell(200, 8, txt=f"Deck: {', '.join(log['deck'])}", ln=True)
-        pdf.ln(2)  # Small space between entries
+        pdf.set_fill_color(188, 189, 211)
+        pdf.cell(0, 8, f"Player {log['player']}: Turn {log.get('turn')}", ln=True, fill=True)
+        pdf.cell(0, 8, f"Placed Card: {log['played_card']} | Cards left: {len(log['deck'])}", ln=True)
+        pdf.multi_cell(0, 8, f"Deck: {', '.join(log['deck'])}", ln=True)
+        pdf.ln(2)
+    #No winner
+    if winner !=0:
+        #Bolder and larger font to add emphasis at the end
+        pdf.set_font("Arial", "B", 12)
+        pdf.cell(0,8, f"Player {winner} has won the game!", ln=True, fill=True)
     pdf.output("activity_log.pdf")
 
 
