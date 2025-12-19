@@ -133,7 +133,7 @@ def pick_card(deck, bot, current_card,pile) -> tuple:
                         color, number = chosen_card.split(" ")
                         current_color, current_number = current_card.split(" ")
                         #grey means that it is a wildcard and can be placed anytime
-                        if color == current_color or number == current_number:
+                        if color!="grey" and (color == current_color or number == current_number):
                             deck.remove(chosen_card)
                             last_card=chosen_card
                             return (deck,last_card)

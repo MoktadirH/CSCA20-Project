@@ -82,7 +82,6 @@ while True:
         #Every function are given these pararmeters even if not used to make code more efficient
         current_wildcards=menu_options[choice](wildcard_options, current_wildcards)
     elif choice == "players":
-        print("players")
         player_count=menu_options[choice]()
     else:
         print("Invalid option. Please try again.")
