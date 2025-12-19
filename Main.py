@@ -37,7 +37,7 @@ main_deck=[]
 global last_card
 last_card=""
 #The amount of actual players playing
-player_count=1
+player_count=0
 #Holds all player classes, indexes are used as player numbers
 players=[]
 
@@ -73,20 +73,20 @@ while True:
         #Allow people to see message before refreshing the console
         time.sleep(0.9)
 
-    #Making the player classes
-    #Making the players real based on total amount of players selected in menu
-    for i in range (4):
-        #used to store the deck before assigning it
-        temp_deck=[]
-        #Grab 7 cards from the main deck
-        for i in range (7):
-            temp_deck.append(main_deck.pop(0))
-        if player_count>i:
-            players.append(Player(temp_deck,False))
-        else:
-            players.append(Player(temp_deck, True))
-    #Grab a card for the middle to start with
-    last_card=main_deck.pop(0)
+#Making the player classes
+#Making the players real based on total amount of players selected in menu
+for i in range (4):
+    #used to store the deck before assigning it
+    temp_deck=[]
+    #Grab 7 cards from the main deck
+    for j in range (7):
+        temp_deck.append(main_deck.pop(0))
+    if player_count>i:
+        players.append(Player(temp_deck,False))
+    else:
+        players.append(Player(temp_deck, True))
+#Grab a card for the middle to start with
+last_card=main_deck.pop(0)
 
 while play_game:
     #Wipe the console each time to make it neat
@@ -97,7 +97,9 @@ while play_game:
         time.sleep(1)
         #Show the current player's hand
         Functions.ShowHands(players[turn].deck, card_template)
-    players[turn].deck=Functions.pick_card(players[turn].deck, players[turn].bot, last_card)
+    #At this point, the last card will be replaced by the new card and the old one will be readded back to the deck randomly
+    main_deck.insert(random.randint(0, len(main_deck)-1), last_card)
+    players[turn].deck=Functions.pick_card(players[turn].deck, players[turn].bot, last_card, main_deck)
     Functions.log_play(players[turn].deck, last_card, turn+1)
     if players[turn].deck==[]:
         play_game=False
@@ -108,7 +110,8 @@ while play_game:
         if turn==3:
             turn=0
         else:
-            turn=+1
+            turn=turn+1
+        
 
 
     

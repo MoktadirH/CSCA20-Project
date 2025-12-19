@@ -13,6 +13,13 @@ colors = {
     "blue": "[blue]",
     "grey": "[grey]"
 }
+wildcard_symbols={
+    "skip": "⏭",
+    "reverse": "↔",
+    "two": "+",
+    "wild": "*",
+    "four": "#",
+    "swap": "↩"}
 
 console = Console()
 #keep track of decks after every turn for game log
@@ -30,13 +37,14 @@ def makeDeck(wildcards) -> list:
         #For each color, it makes cards numbered 0-9
         for number in range(0, 10):
             #Makes two of each card
-            deck.append(f"{color} {number}")
-            deck.append(f"{color} {number}")
+            deck.append(color + " " + str(number))
+            deck.append(color + " " + str(number))
     #Adds the wildcards
     for wildcard in wildcards:
         #4 of each wildcard
         for i in range(4):
-            deck.append(wildcard)
+            deck.append("grey " + wildcard)
+    return deck
 
 
 def ShowHands (deck, template):
@@ -65,19 +73,20 @@ def pick_card(deck, bot, current_card,pile) -> list:
         current_color, current_number = current_card.split(" ")
         for card in deck:
             color, number = card.split(" ")
-            if color == current_color or number == current_number:
+            if color == current_color or number == current_number or color == "grey":
                 possible_cards.append(card)
         if possible_cards:
             picked_card=random.choice(possible_cards)
+            deck.remove(picked_card)
             if picked_card.split(" ")[0]=="grey":
                 #assign wildcard abilities and choose a random color
                 new_color=random.choice(["red","green","blue","yellow"])
                 picked_card=new_color + picked_card.split(' ')[1]
-            deck.remove(picked_card)
             last_card=picked_card
             return deck
         else:
-            return deck.append(pile.pop(0))
+            deck.append(pile.pop(0))
+            return deck
     else:
         while True:
             try:
@@ -113,20 +122,31 @@ def pick_card(deck, bot, current_card,pile) -> list:
 "else, pick up a card, not done yet"
 
 def log_play(deck, card, player):
-    #Update after every turn
-    game_logs.append({
+    #Update after every turn, a dictionary as an index in a list
+    if deck is None:
+        game_logs.append({
+            "player": player,
+            "deck_length": 0,
+            "played_card": card,
+            "deck": []
+        })
+    else:
+        game_logs.append({
         "player": player,
         "deck_length": len(deck),
         "played_card": card,
         "deck": deck
-    })
+        })
 
 def generate_game_pdf(filename="game_summary.pdf"):
     pdf = FPDF()
     pdf.add_page()
-    pdf.set_font("Arial", size=12)
+    pdf.set_font("Times New Roman", size=12)
     
     pdf.cell(200, 10, txt="Uno Game Summary", ln=True, align='C')
     pdf.ln(10)
+    for log in game_logs:
+        pdf.cell(200, 10, txt=f"Player {log['player']} played {log['played_card']}. Cards left: {log['deck_length']}", ln=True)
+        pdf.ln(3)
 
 
