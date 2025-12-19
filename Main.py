@@ -28,7 +28,7 @@ global main_deck
 main_deck=[]
 last_card=""
 #The amount of actual players playing
-player_count=0
+player_count=1
 #Holds all player classes, indexes are used as player numbers
 players=[]
 

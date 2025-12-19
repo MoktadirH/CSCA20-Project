@@ -88,7 +88,8 @@ def ShowHands (deck, template, picked_card):
         picked_card_lines.append(card_line)
     picked_card_text = "\n".join(picked_card_lines)
     picked_panel = Panel(picked_card_text, title="Last Played Card", border_style="red")
-
+    
+    #Put the two panels into columns so that it shows up side by side
     console.print(Columns([panel,picked_panel]))
 
 #Return a tuple of the deck and the last played card
