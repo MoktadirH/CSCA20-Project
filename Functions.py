@@ -49,6 +49,11 @@ def makeDeck(wildcards) -> list:
 
 
 def ShowHands (deck, template, picked_card):
+    """
+    This function takes in a player's deck as well as the last played card and shows it in a card format.
+    It uses the a template so that cards look conistent, with the only change being the number/symbol inside.
+    The function does not return anything as it just prints to the console and does not change anything.
+    """
     #[/] turns the color off so that it does not leak later
     hand_lines = ["[bold cyan]Your hand:[/]\n"]
     for i in range(0, len(deck), 5):
@@ -85,6 +90,12 @@ def ShowHands (deck, template, picked_card):
 
 #Return a tuple of the deck and the last played card
 def pick_card(deck, bot, current_card,pile) -> tuple:
+    """
+    This function makes the player pick a card from their deck or draw a card if they like to. If the player is a bot
+    it automatically picks a card for them by finding which cards can be placed. The function takes in the player's deck,
+    if they are a bot or not, the last card that was placed and the middle pile if they want to draw from.
+    the function returns a tuple of both the player's deck and the newly last placed card.
+    """
     if bot:
         #Pick a random card that is allowed
         possible_cards=[]
@@ -140,12 +151,10 @@ def pick_card(deck, bot, current_card,pile) -> tuple:
                 print("Invalid input. Please try again.")
                 continue
 
-            
-
-"else, pick up a card, not done yet"
 
 def log_play(deck, card, player,turn):
-    #Update after every turn, a dictionary as an index in a list
+    """Update after every turn and adds a dictionary as an index in a list. Takes in the
+    player's deck, player and turn number, and the card played."""
     if deck is None:
         game_logs.append({
             "player": player,
@@ -162,7 +171,12 @@ def log_play(deck, card, player,turn):
         "deck": deck.copy()
         })
 
-def generate_game_pdf(filename="game_summary.pdf"):
+def generate_game_pdf():
+    """
+    Using a game log that was tracking every move, it creates a PDF with each turn's details so that the move can be traced back.
+    It also shows the whole match so that player's can analyze their moves and see what they could've changed.
+    The function does not return anything but outputs a PDF file in the folder of the python files.
+    """
     pdf = FPDF()
     pdf.add_page()
     #Spacing margins
