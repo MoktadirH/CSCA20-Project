@@ -32,7 +32,7 @@ global main_deck
 main_deck=[]
 last_card=""
 #The amount of actual players playing
-player_count=0
+player_count=1
 #Holds all player classes, indexes are used as player numbers
 players=[]
 
@@ -77,7 +77,7 @@ for i in range (4):
     #used to store the deck before assigning it
     temp_deck=[]
     #Grab 7 cards from the main deck
-    for j in range (5):
+    for j in range (7):
         temp_deck.append(main_deck.pop(0))
     if player_count>i:
         players.append(Player(temp_deck,False))
@@ -93,8 +93,9 @@ while play_game:
     if not players[turn].bot:
         print(f"It is player {turn+1}'s turn. Look away if it is not your turn!")
         time.sleep(1)
+        print("\033[H\033[2J")
         #Show the current player's hand
-        Functions.ShowHands(players[turn].deck, card_template)
+        Functions.ShowHands(players[turn].deck, card_template,last_card)
     #At this point, the last card will be replaced by the new card and the old one will be readded back to the deck randomly
     main_deck.insert(random.randint(0, len(main_deck)-1), last_card)
     players[turn].deck,last_card=Functions.pick_card(players[turn].deck, players[turn].bot, last_card, main_deck)

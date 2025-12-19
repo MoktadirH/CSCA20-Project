@@ -2,6 +2,7 @@ import random
 from rich.console import Console
 from rich.text import Text
 from rich.panel import Panel
+from rich.layout import Layout
 from fpdf import FPDF
 #We need this when players or a bot chooses a card and it is a wildcard
 import Wildcards
@@ -47,7 +48,7 @@ def makeDeck(wildcards) -> list:
     return deck
 
 
-def ShowHands (deck, template):
+def ShowHands (deck, template, picked_card):
     #[/] turns the color off so that it does not leak later
     hand_lines = ["[bold cyan]Your hand:[/]\n"]
     for i in range(0, len(deck), 5):
@@ -63,8 +64,24 @@ def ShowHands (deck, template):
             hand_lines.append("  ".join(line_sections))
     #joins the line of the hand together with a new line, also turns them into a string
     hand_text = "\n".join(hand_lines)
-    panel = Panel(hand_text, title="Player Hand", border_style="red")
-    console.print(panel)
+    panel = Panel(hand_text, title="Player Hand", border_style="green")
+    
+    #Making the card for the last played card and putting it in a panel
+    picked_color,picked_number=picked_card.split(" ")
+    picked_card_color=colors.get(picked_color)
+    picked_card_lines=[]
+    for line in template:
+        card_line = picked_card_color + line.replace("x", str(picked_number)) + "[/]"
+        picked_card_lines.append(card_line)
+    picked_card_text = "\n".join(picked_card_lines)
+    picked_panel = Panel(picked_card_text, title="Last Played Card", border_style="red")
+
+    layout=Layout()
+    layout.split_row(
+        Layout(panel,name="hand", ratio=3),
+        Layout(picked_panel, name="picked_card", ratio=1)
+    )
+    console.print(layout)
 
 #Return a tuple of the deck and the last played card
 def pick_card(deck, bot, current_card,pile) -> tuple:
@@ -161,7 +178,7 @@ def generate_game_pdf(filename="game_summary.pdf"):
     pdf.ln(5)
     pdf.set_font("Arial", size=11)
     for log in game_logs:
-        pdf.set_fill_color(240, 240, 240)  # Light gray background for each log entry
+        pdf.set_fill_color(240, 240, 240)
         pdf.cell(200, 8, txt=f"Player {log['player']}: Turn {log.get('turn')}", ln=True, fill=True)
         pdf.cell(200, 8, txt=f"Played: {log['played_card']} | Cards left: {log['deck_length']}", ln=True)
         pdf.multi_cell(200, 8, txt=f"Deck: {', '.join(log['deck'])}", ln=True)
