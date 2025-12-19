@@ -185,19 +185,22 @@ def generate_game_pdf(winner):
     #Spacing margins, left, top and right side
     pdf.set_margins(15, 15, 20)
     pdf.set_font("Arial", "B", 16)
-    #cell is where you can write text onto, change
+    #Cell acts as a line on the pdf, aligned to the center
     pdf.cell(0, 15, txt="Uno Game Activity", ln=True, align="C")
     #Spacing
     pdf.ln(10)
     pdf.set_font("Arial", "B", 12)
+    #Aligned to the left margin. A heading for the logs
     pdf.cell(0, 10, txt="Turn Log", ln=True, align="L")
     pdf.ln(5)
+    #Make font smaller for logs compared to heading and title
     pdf.set_font("Arial", size=11)
     for log in game_logs:
+        #Soft purple color to make the pdf look visually pleasing. Only shows up when fill=True
         pdf.set_fill_color(188, 189, 211)
-        pdf.cell(0, 8, f"Player {log['player']}: Turn {log.get('turn')}", ln=True, fill=True)
-        pdf.cell(0, 8, f"Placed Card: {log['played_card']} | Cards left: {len(log['deck'])}", ln=True)
-        pdf.multi_cell(0, 8, f"Deck: {', '.join(log['deck'])}", ln=True)
+        pdf.cell(0, 10, f"Player {log['player']}: Turn {log.get('turn')}", ln=True, fill=True)
+        pdf.cell(0, 10, f"Placed Card: {log['played_card']} | Cards left: {len(log['deck'])}", ln=True)
+        pdf.multi_cell(0, 10, f"Deck: {', '.join(log['deck'])}", ln=True)
         pdf.ln(2)
     #Winner has been declared to a player
     if winner !=0:
