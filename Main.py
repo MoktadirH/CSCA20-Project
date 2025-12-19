@@ -30,8 +30,12 @@ menu_options={"start":Menu.start_game,
 wildcard_options=["skip", "reverse", "two", "wild", "four", "swap"]
 #All active by default
 current_wildcards=["skip", "reverse", "two", "wild", "four", "swap"]
-#The main deck that will be used to get cards from
+#The main deck that will be used to get cards from, global so it can be accessed by all files
+global main_deck
 main_deck=[]
+#Making it global allows it to be changed for any file
+global last_card
+last_card=""
 #The amount of actual players playing
 player_count=1
 #Holds all player classes, indexes are used as player numbers
@@ -40,8 +44,11 @@ players=[]
 #Decides when to go into the game and when to stop, when someone gets rid of their deck
 play_game=False
 
-#Direction of turn, starts off going forward unless a reverse card is placed
-turn=1
+#Direction and the turn, starts off going forward unless a reverse card is placed
+turn=0
+direction=1
+
+
 
 #Loop just for menu
 while True:
@@ -66,7 +73,6 @@ while True:
         #Allow people to see message before refreshing the console
         time.sleep(0.9)
 
-while play_game:
     #Making the player classes
     #Making the players real based on total amount of players selected in menu
     for i in range (4):
@@ -79,6 +85,20 @@ while play_game:
             players.append(Player(temp_deck,False))
         else:
             players.append(Player(temp_deck, True))
+    #Grab a card for the middle to start with
+    last_card=main_deck.pop(0)
+
+while play_game:
+    #Wipe the console each time to make it neat
+    print("\033[H\033[2J")
+    #Display who's turn it is so the player knows, only if the current player is not a bot
+    if not players[turn].bot:
+        print(f"It is player {turn+1}'s turn. Look away if it is not your turn!")
+        time.sleep(1)
+        #Show the current player's hand
+        Functions.ShowHands(players[turn].deck, card_template)
+        players[turn].deck=Functions.pick_card(players[turn].deck, players[turn].bot, last_card)
+
 
     
 
